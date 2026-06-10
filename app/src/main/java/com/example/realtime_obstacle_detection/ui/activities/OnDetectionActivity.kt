@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -42,8 +43,8 @@ import com.example.realtime_obstacle_detection.domain.ObjectDetectionResult
 import com.example.realtime_obstacle_detection.domain.ObstacleClassifier
 import com.example.realtime_obstacle_detection.presentation.camera.CameraPreview
 import com.example.realtime_obstacle_detection.presentation.tensorflow.TensorFlowLiteFrameAnalyzer
-import com.example.realtime_obstacle_detection.ui.screens.initialConfigurations.ConfigurationCard
 import com.example.realtime_obstacle_detection.ui.screens.initialConfigurations.ModelConfig
+import com.example.realtime_obstacle_detection.ui.screens.settings.ConfigPreferences
 import com.example.realtime_obstacle_detection.ui.theme.primary
 import com.example.realtime_obstacle_detection.utis.boxdrawer.calculateIoU
 import com.example.realtime_obstacle_detection.utis.boxdrawer.drawBoundingBoxes
@@ -73,6 +74,8 @@ class OnDetectionActivity : ComponentActivity(), ObstacleClassifier {
     private val processingScope = CoroutineScope(Dispatchers.IO)
     // State to track whether the detector is ready
     private var isDetectorReady by mutableStateOf(false)
+    // Holds a human-readable error if the detector/model failed to load
+    private var detectorError by mutableStateOf<String?>(null)
     // Mutable state to hold the computed FPS value
     private var fps by mutableIntStateOf(0)
     private var inferenceTimeMs by mutableLongStateOf(0L)
@@ -108,13 +111,11 @@ class OnDetectionActivity : ComponentActivity(), ObstacleClassifier {
         )
 
         setContent {
-            var isConfigured by remember { mutableStateOf(false) }
-
-            if (!isConfigured) {
-                // Show configuration card and wait for user configuration
-                ConfigurationCard { config ->
+            // Load the saved configuration and initialise the detector once.
+            LaunchedEffect(Unit) {
+                if (modelConfig == null) {
+                    val config = ConfigPreferences.loadModelConfig(this@OnDetectionActivity)
                     modelConfig = config
-                    isConfigured = true
 
                     // Use lazy async initialization on the IO dispatcher
                     val detectorDeferred = lifecycleScope.async(Dispatchers.IO) {
@@ -134,17 +135,27 @@ class OnDetectionActivity : ComponentActivity(), ObstacleClassifier {
                     }
 
                     lifecycleScope.launch {
-                        obstacleDetector = detectorDeferred.await()
-                        isDetectorReady = true
-                        withContext(Dispatchers.Main) {
-                            setupCameraXExtensions()
+                        try {
+                            obstacleDetector = detectorDeferred.await()
+                            isDetectorReady = true
+                            withContext(Dispatchers.Main) {
+                                setupCameraXExtensions()
+                            }
+                        } catch (e: Exception) {
+                            Log.e("OnDetection", "Detector setup failed", e)
+                            detectorError = "Couldn't load model \"${config.selectedModel.modelFileName}\".\n\n" +
+                                    "Make sure the model and label files exist in app/src/main/assets, " +
+                                    "or pick a different model in Settings.\n\n(${e.message})"
                         }
                     }
-
                 }
-            } else {
-                // If configured but detector is not yet ready, show a loading indicator
-                if (!isDetectorReady) {
+            }
+
+            run {
+                if (detectorError != null) {
+                    DetectorErrorMessage(detectorError!!)
+                } else if (!isDetectorReady) {
+                    // If configured but detector is not yet ready, show a loading indicator
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -164,11 +175,23 @@ class OnDetectionActivity : ComponentActivity(), ObstacleClassifier {
                         modifier = Modifier.fillMaxSize(),
                         color = primary
                     ) {
-                        // Overlay the FPS text on top of the camera preview.
-                            CameraPreview(
-                                controller = controller,
+                        // Live camera preview (visible between processed frames).
+                        CameraPreview(
+                            controller = controller,
+                            modifier = Modifier.fillMaxSize()
+                        )
+
+                        // Processed frame with bounding boxes, full-screen like the camera view.
+                        image?.let {
+                            Image(
+                                bitmap = it.asImageBitmap(),
+                                contentDescription = "Processed Image",
+                                contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
                             )
+                        }
+
+                        // FPS / inference overlay kept on top of the processed frame.
                         Column(
                             modifier = Modifier
                                 .padding(8.dp)
@@ -186,14 +209,6 @@ class OnDetectionActivity : ComponentActivity(), ObstacleClassifier {
                                 fontSize = 16.sp,
                                 modifier = Modifier
                                     .padding(16.dp)
-                            )
-                        }
-
-                        image?.let {
-                            Image(
-                                bitmap = it.asImageBitmap(),
-                                contentDescription = "Processed Image",
-                                modifier = Modifier.fillMaxSize()
                             )
                         }
                     }
@@ -255,11 +270,13 @@ class OnDetectionActivity : ComponentActivity(), ObstacleClassifier {
         // Run ARCore-related operations on the main thread
         runOnUiThread {
             val frame = latestFrame
-            if (frame != null) {
-                // List to hold results with distance information
-                val resultsWithDistance = mutableListOf<ObjectDetectionResult>()
 
-                for (box in objectDetectionResults) {
+            // Attach a distance to each detection when an AR frame is available;
+            // otherwise keep the detection without a distance. Either way the boxes
+            // are still drawn below so they always appear on screen.
+            val resultsWithDistance = objectDetectionResults.map { box ->
+                val newResult = box.copy()
+                if (frame != null) {
                     val bitmapWidth = detectedScene.width.toFloat()
                     val bitmapHeight = detectedScene.height.toFloat()
                     val centerX = (box.x1 + box.x2) / 2f * bitmapWidth
@@ -272,9 +289,6 @@ class OnDetectionActivity : ComponentActivity(), ObstacleClassifier {
                         emptyList()
                     }
 
-                    // Create a copy of the result to update the distance
-                    val newResult = box.copy()
-
                     if (hitResults.isNotEmpty()) {
                         val hit = hitResults[0]
                         val cameraPose = frame.camera.pose
@@ -283,43 +297,37 @@ class OnDetectionActivity : ComponentActivity(), ObstacleClassifier {
                         val dx = objPose.tx() - cameraPose.tx()
                         val dy = objPose.ty() - cameraPose.ty()
                         val dz = objPose.tz() - cameraPose.tz()
-                        val distanceMeters = sqrt(dx * dx + dy * dy + dz * dz)
-                        newResult.distance = distanceMeters
+                        newResult.distance = sqrt(dx * dx + dy * dy + dz * dz)
                     } else {
-                        Log.w("ARHitTest", "No surface detected for bounding box at center ($centerX, $centerY)")
                         newResult.distance = null
                     }
-                    resultsWithDistance.add(newResult)
                 }
+                newResult
+            }
 
-                // Now launch the background scope with the final results
-                processingScope.launch {
-                    // Filter and apply NMS here, as before, but with the new results
-                    val filteredBoxes = resultsWithDistance.filter {
-                        it.confidenceRate >= (modelConfig?.configThreshold ?: 0.5f)
-                    }
-                    val sortedBoxes = filteredBoxes.sortedByDescending { it.confidenceRate }
-                    val selectedBoxes = mutableListOf<ObjectDetectionResult>()
+            // Filter, apply NMS and draw the boxes — always, regardless of AR availability.
+            processingScope.launch {
+                val filteredBoxes = resultsWithDistance.filter {
+                    it.confidenceRate >= (modelConfig?.configThreshold ?: 0.5f)
+                }
+                val sortedBoxes = filteredBoxes.sortedByDescending { it.confidenceRate }
+                val selectedBoxes = mutableListOf<ObjectDetectionResult>()
 
-                    for (box in sortedBoxes) {
-                        var shouldAdd = true
-                        for (selected in selectedBoxes) {
-                            if (calculateIoU(box, selected) > (modelConfig?.iouThreshold ?: 0.5f)) {
-                                shouldAdd = false
-                                break
-                            }
-                        }
-                        if (shouldAdd) {
-                            selectedBoxes.add(box)
+                for (box in sortedBoxes) {
+                    var shouldAdd = true
+                    for (selected in selectedBoxes) {
+                        if (calculateIoU(box, selected) > (modelConfig?.iouThreshold ?: 0.5f)) {
+                            shouldAdd = false
+                            break
                         }
                     }
-
-                    val updatedBitmap = drawBoundingBoxes(detectedScene, selectedBoxes)
-                    image = updatedBitmap
+                    if (shouldAdd) {
+                        selectedBoxes.add(box)
+                    }
                 }
-            } else {
-                Log.w("onDetect", "No AR frame available yet")
-                image = detectedScene
+
+                val updatedBitmap = drawBoundingBoxes(detectedScene, selectedBoxes)
+                image = updatedBitmap
             }
         }
     }

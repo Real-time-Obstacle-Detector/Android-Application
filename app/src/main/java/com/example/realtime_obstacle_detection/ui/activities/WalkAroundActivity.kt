@@ -29,8 +29,8 @@ import com.example.realtime_obstacle_detection.domain.ObjectDetectionResult
 import com.example.realtime_obstacle_detection.domain.ObstacleClassifier
 import com.example.realtime_obstacle_detection.presentation.camera.CameraPreview
 import com.example.realtime_obstacle_detection.presentation.tensorflow.TensorFlowLiteFrameAnalyzer
-import com.example.realtime_obstacle_detection.ui.screens.initialConfigurations.ConfigurationCard
 import com.example.realtime_obstacle_detection.ui.screens.initialConfigurations.ModelConfig
+import com.example.realtime_obstacle_detection.ui.screens.settings.ConfigPreferences
 import com.example.realtime_obstacle_detection.utis.vibration.vibratePhone
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -48,9 +48,10 @@ class WalkAroundActivity : ComponentActivity(), ObstacleClassifier {
     private lateinit var cameraProvider: ProcessCameraProvider
     private val processingScope = CoroutineScope(Dispatchers.IO)
     private var modelConfig: ModelConfig? = null
-    private var isConfigured by mutableStateOf(false)
     // State to track whether the detector is ready
     private var isDetectorReady by mutableStateOf(false)
+    // Holds a human-readable error if the detector/model failed to load
+    private var detectorError by mutableStateOf<String?>(null)
     // Mutable state to hold the computed FPS value
     private var fps by mutableIntStateOf(0)
     private var inferenceTimeMs by mutableLongStateOf(0L)
@@ -61,11 +62,11 @@ class WalkAroundActivity : ComponentActivity(), ObstacleClassifier {
         setContent {
             val context = LocalContext.current
 
-            if (!isConfigured) {
-                // Show configuration card and wait for user configuration
-                ConfigurationCard { config ->
+            // Load the saved configuration and initialise the detector once.
+            LaunchedEffect(Unit) {
+                if (modelConfig == null) {
+                    val config = ConfigPreferences.loadModelConfig(this@WalkAroundActivity)
                     modelConfig = config
-                    isConfigured = true
 
                     // Initialize detector with configuration
                     // Lazy async initialization on the IO dispatcher.
@@ -86,90 +87,99 @@ class WalkAroundActivity : ComponentActivity(), ObstacleClassifier {
                     }
                     // Await detector initialization in a coroutine
                     lifecycleScope.launch {
-                        obstacleDetector = detectorDeferred.await()
-                        isDetectorReady = true
-                        withContext(Dispatchers.Main) {
-                            setupCameraXExtensions()
+                        try {
+                            obstacleDetector = detectorDeferred.await()
+                            isDetectorReady = true
+                            withContext(Dispatchers.Main) {
+                                setupCameraXExtensions()
+                            }
+                        } catch (e: Exception) {
+                            Log.e("WalkAround", "Detector setup failed", e)
+                            detectorError = "Couldn't load model \"${config.selectedModel.modelFileName}\".\n\n" +
+                                    "Make sure the model and label files exist in app/src/main/assets, " +
+                                    "or pick a different model in Settings.\n\n(${e.message})"
                         }
                     }
                 }
-            } else {
+            }
+
+            if (detectorError != null) {
+                DetectorErrorMessage(detectorError!!)
+            } else if (!isDetectorReady) {
                 // If configured but detector is not yet ready, show a loading indicator
-                if (!isDetectorReady) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                // Once the detector is ready, show the camera preview and overlay processed image if available.
+                val controller = remember { LifecycleCameraController(context) }
+
+                LaunchedEffect(Unit) {
+                    controller.setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
+                    bindCameraUseCases(controller)
+                }
+
+                Surface(modifier = Modifier.fillMaxSize(), color = Color.Black) {
+                    // Overlay the FPS text on top of the camera preview.
+
+                        CameraPreview(
+                            controller = controller,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    Column(
+                        modifier = Modifier
+                            .padding(8.dp)
                     ) {
-                        CircularProgressIndicator()
-                    }
-                } else {
-                    // Once the detector is ready, show the camera preview and overlay processed image if available.
-                    val controller = remember { LifecycleCameraController(context) }
-
-                    LaunchedEffect(Unit) {
-                        controller.setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
-                        bindCameraUseCases(controller)
-                    }
-
-                    Surface(modifier = Modifier.fillMaxSize(), color = Color.Black) {
-                        // Overlay the FPS text on top of the camera preview.
-
-                            CameraPreview(
-                                controller = controller,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        Column(
+                        androidx.compose.material3.Text(
+                            text = "FPS: $fps",
+                            color = Color.White,
+                            fontSize = 16.sp,
                             modifier = Modifier
-                                .padding(8.dp)
+                                .padding(16.dp)
+                        )
+                        androidx.compose.material3.Text(
+                            text = "Infer: $inferenceTimeMs ms",
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            modifier = Modifier
+                                .padding(16.dp)
+                        )
+                    }
+
+
+                    if (showAlert) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(alertColor)
+                                .clickable { showAlert = false },
+                            contentAlignment = Alignment.Center
                         ) {
-                            androidx.compose.material3.Text(
-                                text = "FPS: $fps",
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .padding(16.dp)
-                            )
-                            androidx.compose.material3.Text(
-                                text = "Infer: $inferenceTimeMs ms",
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .padding(16.dp)
-                            )
-                        }
-
-
-                        if (showAlert) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(alertColor)
-                                    .clickable { showAlert = false },
-                                contentAlignment = Alignment.Center
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally
+                                Text(
+                                    text = alertText,
+                                    style = MaterialTheme.typography.h4,
+                                    color = Color.Black,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                                Text(
+                                    text = modelMessage ?: "",
+                                    style = MaterialTheme.typography.subtitle1,
+                                    color = Color.Black,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                                Button(
+                                    onClick = { showAlert = false },
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.Black
+                                    )
                                 ) {
-                                    Text(
-                                        text = alertText,
-                                        style = MaterialTheme.typography.h4,
-                                        color = Color.Black,
-                                        modifier = Modifier.padding(16.dp)
-                                    )
-                                    Text(
-                                        text = modelMessage ?: "",
-                                        style = MaterialTheme.typography.subtitle1,
-                                        color = Color.Black,
-                                        modifier = Modifier.padding(16.dp)
-                                    )
-                                    Button(
-                                        onClick = { showAlert = false },
-                                        colors = ButtonDefaults.buttonColors(
-                                            backgroundColor = Color.Black
-                                        )
-                                    ) {
-                                        Text("Acknowledged", color = Color.White)
-                                    }
+                                    Text("Acknowledged", color = Color.White)
                                 }
                             }
                         }
