@@ -17,7 +17,6 @@ local.properties
 # Files/Directories to Ignore
 
 # Specified in the prompt:
-app/src/main/assets/
 opencv2/.cxx/
 .gradle/
 .idea/
