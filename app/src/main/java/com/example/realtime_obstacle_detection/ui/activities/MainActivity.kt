@@ -8,7 +8,9 @@ import android.Manifest
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.realtime_obstacle_detection.ui.model.screens.HomeScreens
 import com.example.realtime_obstacle_detection.ui.screens.homepage.HomePageSetUp
+import com.example.realtime_obstacle_detection.ui.screens.settings.ConfigPreferences
 
 class MainActivity : ComponentActivity(){
 
@@ -16,8 +18,15 @@ class MainActivity : ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupPermissions()
+
+        val startDestination = if (ConfigPreferences.isOnboardingCompleted(this)) {
+            HomeScreens.MainMenu.route
+        } else {
+            HomeScreens.OnboardingWhoWeAre.route
+        }
+
         setContent {
-            HomePageSetUp()
+            HomePageSetUp(startDestination = startDestination)
         }
     }
 
