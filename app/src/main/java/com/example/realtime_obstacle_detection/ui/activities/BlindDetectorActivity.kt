@@ -39,8 +39,8 @@ import com.example.realtime_obstacle_detection.domain.ObjectDetectionResult
 import com.example.realtime_obstacle_detection.domain.ObstacleClassifier
 import com.example.realtime_obstacle_detection.presentation.camera.CameraPreview
 import com.example.realtime_obstacle_detection.presentation.tensorflow.TensorFlowLiteFrameAnalyzer
-import com.example.realtime_obstacle_detection.ui.screens.initialConfigurations.ConfigurationCard
 import com.example.realtime_obstacle_detection.ui.screens.initialConfigurations.ModelConfig
+import com.example.realtime_obstacle_detection.ui.screens.settings.ConfigPreferences
 import com.example.realtime_obstacle_detection.ui.theme.primary
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,6 +58,8 @@ class BlindDetectorActivity : ComponentActivity(), ObstacleClassifier, TextToSpe
     private var modelConfig: ModelConfig? = null
     // State to track whether the detector is ready
     private var isDetectorReady by mutableStateOf(false)
+    // Holds a human-readable error if the detector/model failed to load
+    private var detectorError by mutableStateOf<String?>(null)
     // Mutable state to hold the computed FPS value
     private var fps by mutableIntStateOf(0)
     private var inferenceTimeMs by mutableLongStateOf(0L)
@@ -75,13 +77,11 @@ class BlindDetectorActivity : ComponentActivity(), ObstacleClassifier, TextToSpe
         )
 
         setContent {
-            var isConfigured by remember { mutableStateOf(false) }
-
-            if (!isConfigured) {
-                // Show configuration card and wait for user configuration
-                ConfigurationCard { config ->
+            // Load the saved configuration and initialise the detector once.
+            LaunchedEffect(Unit) {
+                if (modelConfig == null) {
+                    val config = ConfigPreferences.loadModelConfig(this@BlindDetectorActivity)
                     modelConfig = config
-                    isConfigured = true
 
                     // Initialize detector with configuration
                     // Offload heavy detector initialization to a background thread using async.
@@ -102,58 +102,67 @@ class BlindDetectorActivity : ComponentActivity(), ObstacleClassifier, TextToSpe
                     }
                     // Await detector initialization and update the state.
                     lifecycleScope.launch {
-                        obstacleDetector = detectorDeferred.await()
-                        isDetectorReady = true
+                        try {
+                            obstacleDetector = detectorDeferred.await()
+                            isDetectorReady = true
+                        } catch (e: Exception) {
+                            Log.e("BlindDetector", "Detector setup failed", e)
+                            detectorError = "Couldn't load model \"${config.selectedModel.modelFileName}\".\n\n" +
+                                    "Make sure the model and label files exist in app/src/main/assets, " +
+                                    "or pick a different model in Settings.\n\n(${e.message})"
+                        }
                     }
                 }
+            }
+
+            if (detectorError != null) {
+                DetectorErrorMessage(detectorError!!)
+            } else if (!isDetectorReady) {
+                // Show a loading indicator until the detector is ready.
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             } else {
-                if (!isDetectorReady) {
-                    // Show a loading indicator until the detector is ready.
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                // Once the detector is ready, initialize the camera preview.
+                val controller = remember { LifecycleCameraController(applicationContext) }
+
+                LaunchedEffect(Unit) {
+                    controller.setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
+                    setupCameraXExtensions(controller)
+                    bindCameraUseCases(controller)
+                }
+
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = primary
+                ) {
+                    // Overlay the FPS text on top of the camera preview.
+
+                        CameraPreview(
+                            controller = controller,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    Column(
+                        modifier = Modifier
+                            .padding(8.dp)
                     ) {
-                        CircularProgressIndicator()
-                    }
-                } else {
-                    // Once the detector is ready, initialize the camera preview.
-                    val controller = remember { LifecycleCameraController(applicationContext) }
-
-                    LaunchedEffect(Unit) {
-                        controller.setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
-                        setupCameraXExtensions(controller)
-                        bindCameraUseCases(controller)
-                    }
-
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = primary
-                    ) {
-                        // Overlay the FPS text on top of the camera preview.
-
-                            CameraPreview(
-                                controller = controller,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        Column(
+                        Text(
+                            text = "FPS: $fps",
+                            color = Color.White,
+                            fontSize = 16.sp,
                             modifier = Modifier
-                                .padding(8.dp)
-                        ) {
-                            Text(
-                                text = "FPS: $fps",
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .padding(16.dp)
-                            )
-                            Text(
-                                text = "Infer: $inferenceTimeMs ms",
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .padding(16.dp)
-                            )
-                        }
+                                .padding(16.dp)
+                        )
+                        Text(
+                            text = "Infer: $inferenceTimeMs ms",
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            modifier = Modifier
+                                .padding(16.dp)
+                        )
                     }
                 }
             }
