@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.realtime_obstacle_detection.ui.theme.toSp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.realtime_obstacle_detection.data.ObstacleDetector
@@ -199,14 +200,14 @@ class OnDetectionActivity : ComponentActivity(), ObstacleClassifier {
                             Text(
                                 text = "FPS: $fps",
                                 color = Color.White,
-                                fontSize = 16.sp,
+                                fontSize = 16.dp.toSp(),
                                 modifier = Modifier
                                     .padding(16.dp)
                             )
                             Text(
                                 text = "Infer: $inferenceTimeMs ms",
                                 color = Color.White,
-                                fontSize = 16.sp,
+                                fontSize = 16.dp.toSp(),
                                 modifier = Modifier
                                     .padding(16.dp)
                             )

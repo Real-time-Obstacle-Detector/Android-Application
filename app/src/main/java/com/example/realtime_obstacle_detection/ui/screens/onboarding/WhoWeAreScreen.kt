@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import com.example.realtime_obstacle_detection.R
 import com.example.realtime_obstacle_detection.ui.theme.RodColors
 import com.example.realtime_obstacle_detection.ui.theme.RodType
+import com.example.realtime_obstacle_detection.ui.theme.toSp
 
 /**
  * Onboarding splash 1 — "ROD: Research Built for Safer Walking".
@@ -144,7 +145,7 @@ fun WhoWeAreScreen(
                         Spacer(Modifier.width(8.dp))
                         Text(
                             text = "ENVIRONMENT SECURE",
-                            fontSize = 12.sp,
+                            fontSize = 12.dp.toSp(),
                             style = RodType.LabelCaps,
                             color = RodColors.TextPrimary
                         )
@@ -244,7 +245,7 @@ private fun TrustCell(icon: ImageVector, label: String, modifier: Modifier = Mod
         Spacer(Modifier.height(4.dp))
         Text(
             text = label,
-            fontSize = 10.sp,
+            fontSize = 10.dp.toSp(),
             style = RodType.LabelCaps,
             color = RodColors.TextSecondary,
             textAlign = TextAlign.Center
@@ -279,7 +280,7 @@ private fun DetectionBox(label: String, width: androidx.compose.ui.unit.Dp, heig
                 .background(RodColors.Primary)
                 .padding(horizontal = 8.dp, vertical = 2.dp)
         ) {
-            Text(text = label, color = RodColors.OnPrimary, fontSize = 10.sp, style = RodType.LabelCaps)
+            Text(text = label, color = RodColors.OnPrimary, fontSize = 10.dp.toSp(), style = RodType.LabelCaps)
         }
     }
 }

@@ -62,6 +62,7 @@ import com.example.realtime_obstacle_detection.ui.activities.OnDetectionActivity
 import com.example.realtime_obstacle_detection.ui.activities.WalkAroundActivity
 import com.example.realtime_obstacle_detection.ui.theme.RodColors
 import com.example.realtime_obstacle_detection.ui.theme.RodType
+import com.example.realtime_obstacle_detection.ui.theme.toSp
 
 private enum class DetectionMode { BLIND, WALK, BOUNDING }
 
@@ -302,7 +303,7 @@ private fun ModeCard(
         Spacer(Modifier.height(8.dp))
         Text(
             text = title,
-            fontSize = 14.sp,
+            fontSize = 14.dp.toSp(),
             fontWeight = FontWeight.SemiBold,
             color = RodColors.TextPrimary,
             textAlign = TextAlign.Center
@@ -310,10 +311,10 @@ private fun ModeCard(
         Spacer(Modifier.height(2.dp))
         Text(
             text = description,
-            fontSize = 11.sp,
+            fontSize = 11.dp.toSp(),
             color = RodColors.OnSurfaceVariant,
             textAlign = TextAlign.Center,
-            lineHeight = 13.sp
+            lineHeight = 13.dp.toSp()
         )
     }
 }
@@ -330,6 +331,6 @@ private fun InfoPill(text: String, icon: ImageVector, iconTint: Color) {
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Icon(icon, contentDescription = null, tint = iconTint, modifier = Modifier.size(16.dp))
-        Text(text = text, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = RodColors.OnSurfaceVariant)
+        Text(text = text, fontSize = 12.dp.toSp(), fontWeight = FontWeight.SemiBold, color = RodColors.OnSurfaceVariant)
     }
 }

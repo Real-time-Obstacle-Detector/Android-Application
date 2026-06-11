@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.sp
 import com.example.realtime_obstacle_detection.R
 import com.example.realtime_obstacle_detection.ui.theme.RodColors
 import com.example.realtime_obstacle_detection.ui.theme.RodType
+import com.example.realtime_obstacle_detection.ui.theme.toSp
 
 /**
  * About page — translated from the about_rod design (provided HTML).
@@ -170,7 +171,7 @@ private fun QuickAction(label: String, icon: ImageVector, modifier: Modifier = M
         ) {
             Icon(icon, contentDescription = label, tint = RodColors.OnSurfaceVariant, modifier = Modifier.size(20.dp))
         }
-        Text(label, fontSize = 10.sp, style = RodType.LabelCaps, color = RodColors.OnSurfaceVariant)
+        Text(label, fontSize = 10.dp.toSp(), style = RodType.LabelCaps, color = RodColors.OnSurfaceVariant)
     }
 }
 
@@ -215,7 +216,7 @@ private fun DatasetAccordion() {
                 ) {
                     Text("Paper-level Instances", style = RodType.HeadlineSm, color = Color.White)
                     Spacer(Modifier.height(4.dp))
-                    Text("31,331 verified high-fidelity annotations.", fontSize = 12.sp, color = Color.White.copy(alpha = 0.8f))
+                    Text("31,331 verified high-fidelity annotations.", fontSize = 12.dp.toSp(), color = Color.White.copy(alpha = 0.8f))
                 }
             }
 
@@ -336,9 +337,9 @@ private fun MetricCard(value: String, label: String, modifier: Modifier = Modifi
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(value, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = RodColors.Primary)
+        Text(value, fontSize = 24.dp.toSp(), fontWeight = FontWeight.Bold, color = RodColors.Primary)
         Spacer(Modifier.height(2.dp))
-        Text(label.uppercase(), fontSize = 10.sp, style = RodType.LabelCaps, color = RodColors.OnSurfaceVariant)
+        Text(label.uppercase(), fontSize = 10.dp.toSp(), style = RodType.LabelCaps, color = RodColors.OnSurfaceVariant)
     }
 }
 
@@ -357,7 +358,7 @@ private fun ClassChip(label: String, icon: ImageVector, highlighted: Boolean = f
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Icon(icon, contentDescription = null, tint = fg, modifier = Modifier.size(14.dp))
-        Text(label, fontSize = 12.sp, color = fg)
+        Text(label, fontSize = 12.dp.toSp(), color = fg)
     }
 }
 
@@ -370,7 +371,7 @@ private fun PlainChip(label: String) {
             .border(1.dp, RodColors.OutlineVariant, CircleShape)
             .padding(horizontal = 12.dp, vertical = 4.dp)
     ) {
-        Text(label, fontSize = 12.sp, color = RodColors.OnSurfaceVariant)
+        Text(label, fontSize = 12.dp.toSp(), color = RodColors.OnSurfaceVariant)
     }
 }
 
@@ -388,7 +389,7 @@ private fun PaperRow(title: String, subtitle: String) {
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(title, style = RodType.BodyMd, fontWeight = FontWeight.SemiBold, color = RodColors.OnSurface)
-            Text(subtitle, fontSize = 12.sp, color = RodColors.OnSurfaceVariant)
+            Text(subtitle, fontSize = 12.dp.toSp(), color = RodColors.OnSurfaceVariant)
         }
         Spacer(Modifier.width(12.dp))
         Box(

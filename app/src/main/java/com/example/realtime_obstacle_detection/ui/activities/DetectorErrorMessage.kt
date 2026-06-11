@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.realtime_obstacle_detection.ui.theme.RodColors
+import com.example.realtime_obstacle_detection.ui.theme.toSp
 
 /**
  * Full-screen, accessible error state shown when the detector/model cannot be
@@ -44,13 +45,13 @@ fun DetectorErrorMessage(message: String) {
             Text(
                 text = "Detection unavailable",
                 color = RodColors.OnSurface,
-                fontSize = 20.sp,
+                fontSize = 20.dp.toSp(),
                 textAlign = TextAlign.Center
             )
             Text(
                 text = message,
                 color = RodColors.OnSurfaceVariant,
-                fontSize = 14.sp,
+                fontSize = 14.dp.toSp(),
                 textAlign = TextAlign.Center
             )
         }

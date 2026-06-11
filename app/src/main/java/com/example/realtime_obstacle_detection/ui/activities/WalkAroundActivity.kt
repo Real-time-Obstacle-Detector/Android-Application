@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.realtime_obstacle_detection.ui.theme.toSp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.realtime_obstacle_detection.data.ObstacleDetector
@@ -136,14 +137,14 @@ class WalkAroundActivity : ComponentActivity(), ObstacleClassifier {
                         androidx.compose.material3.Text(
                             text = "FPS: $fps",
                             color = Color.White,
-                            fontSize = 16.sp,
+                            fontSize = 16.dp.toSp(),
                             modifier = Modifier
                                 .padding(16.dp)
                         )
                         androidx.compose.material3.Text(
                             text = "Infer: $inferenceTimeMs ms",
                             color = Color.White,
-                            fontSize = 16.sp,
+                            fontSize = 16.dp.toSp(),
                             modifier = Modifier
                                 .padding(16.dp)
                         )
