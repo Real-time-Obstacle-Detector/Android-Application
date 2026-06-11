@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.example.realtime_obstacle_detection.R
 import com.example.realtime_obstacle_detection.ui.theme.RodColors
 import com.example.realtime_obstacle_detection.ui.theme.RodType
+import com.example.realtime_obstacle_detection.ui.theme.toSp
 
 /**
  * Onboarding splash 3 — Safety agreement / disclaimer.
@@ -85,7 +86,7 @@ fun SafetyAgreementScreen(
                     .padding(horizontal = 20.dp)
                     .padding(bottom = 164.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
             ) {
                 // Calm caution illustration
                 Box(
@@ -93,7 +94,7 @@ fun SafetyAgreementScreen(
                         .widthIn(max = 340.dp)
                         .fillMaxWidth()
                         .height(220.dp)
-                        .clip(RoundedCornerShape(24.dp)),
+                        .clip(RoundedCornerShape(32.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
@@ -129,20 +130,27 @@ fun SafetyAgreementScreen(
                         .clip(RoundedCornerShape(24.dp))
                         .background(RodColors.SurfaceContainerLow)
                         .border(1.dp, RodColors.BorderLight, RoundedCornerShape(24.dp))
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                        .padding(horizontal = 16.dp, vertical = 14.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Icon(Icons.Filled.Info, contentDescription = null, tint = RodColors.Tertiary, modifier = Modifier.size(20.dp))
-                        Text("IMPORTANT NOTICE", style = RodType.LabelCaps, color = RodColors.Tertiary)
+                        Icon(Icons.Filled.Info, contentDescription = null, tint = RodColors.Tertiary, modifier = Modifier.size(18.dp))
+                        Text(
+                            "IMPORTANT NOTICE",
+                            style = RodType.LabelCaps,
+                            color = RodColors.Tertiary,
+                            fontSize = 10.dp.toSp()
+                        )
                     }
                     Text(
                         text = "ROD is not a medical device. Results may be inaccurate due to lighting, angle, or motion blur. Users should always maintain secondary environmental awareness.",
                         style = RodType.BodyMd,
-                        color = RodColors.OnSurfaceVariant
+                        color = RodColors.OnSurfaceVariant,
+                        fontSize = 13.dp.toSp(),
+                        lineHeight = 18.dp.toSp()
                     )
                 }
 
@@ -217,7 +225,7 @@ fun SafetyAgreementScreen(
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
-                Text("I Agree & Continue", style = RodType.HeadlineSm)
+                Text("I Agree & Continue", style = RodType.BodyLg)
                 Spacer(Modifier.width(8.dp))
                 Icon(Icons.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(24.dp))
             }

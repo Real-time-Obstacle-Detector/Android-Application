@@ -86,7 +86,8 @@ fun OnDeviceAiScreen(
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = 20.dp)
                     .padding(top = 8.dp, bottom = 108.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = "Real-Time. Accurate. Private.",
@@ -150,10 +151,10 @@ fun OnDeviceAiScreen(
 
         // Bottom navigation shell
         Column(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
                 .background(RodColors.SurfaceContainerLowest.copy(alpha = 0.92f))
         ) {
             PageIndicators(
