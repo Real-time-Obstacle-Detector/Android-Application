@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Storage
@@ -33,12 +31,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -89,70 +85,25 @@ fun WhoWeAreScreen(
                     .padding(horizontal = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Smartphone scanning illustration
+                // Intro image
                 Box(
                     modifier = Modifier
-                        .widthIn(max = 320.dp)
+                        .widthIn(max = 340.dp)
                         .fillMaxWidth()
-                        .aspectRatio(9f / 16f)
-                        .clip(RoundedCornerShape(48.dp))
+                        .height(220.dp)
+                        .clip(RoundedCornerShape(32.dp))
                         .background(RodColors.SurfaceContainerLow)
-                        .border(8.dp, RodColors.TextPrimary, RoundedCornerShape(48.dp))
+                        .border(6.dp, RodColors.TextPrimary, RoundedCornerShape(32.dp))
                 ) {
                     Image(
-                        painter = painterResource(R.drawable.onboarding_sidewalk),
+                        painter = painterResource(R.drawable.onboarding_first_slider),
                         contentDescription = "Pedestrian sidewalk",
-                        contentScale = ContentScale.Crop,
+                        contentScale = ContentScale.Fit,
                         modifier = Modifier.fillMaxSize()
                     )
-
-                    // Bounding box: STAIRS • 2.5m
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .padding(start = 40.dp, top = 90.dp)
-                    ) {
-                        DetectionBox(label = "STAIRS • 2.5m", width = 128.dp, height = 80.dp)
-                    }
-                    // Bounding box: BOLLARD • 1.2m
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(end = 36.dp, bottom = 90.dp)
-                    ) {
-                        DetectionBox(label = "BOLLARD • 1.2m", width = 96.dp, height = 120.dp)
-                    }
-
-                    // Glass status pill — ENVIRONMENT SECURE
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .padding(top = 24.dp)
-                            .fillMaxWidth(0.8f)
-                            .height(40.dp)
-                            .clip(CircleShape)
-                            .background(Color.White.copy(alpha = 0.45f))
-                            .border(1.dp, Color.White.copy(alpha = 0.4f), CircleShape),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.CheckCircle,
-                            contentDescription = null,
-                            tint = RodColors.Primary,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(
-                            text = "ENVIRONMENT SECURE",
-                            fontSize = 12.dp.toSp(),
-                            style = RodType.LabelCaps,
-                            color = RodColors.TextPrimary
-                        )
-                    }
                 }
 
-                Spacer(Modifier.height(32.dp))
+                Spacer(Modifier.height(18.dp))
 
                 // Title + subtitle
                 Text(
@@ -170,7 +121,7 @@ fun WhoWeAreScreen(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(16.dp))
 
                 // Trust label card with 3 columns
                 Row(
@@ -181,7 +132,7 @@ fun WhoWeAreScreen(
                         .clip(RoundedCornerShape(16.dp))
                         .background(RodColors.SurfaceContainerLowest)
                         .border(1.dp, RodColors.BorderLight, RoundedCornerShape(16.dp))
-                        .padding(vertical = 16.dp)
+                        .padding(vertical = 12.dp)
                 ) {
                     TrustCell(Icons.Filled.School, "Published Research", Modifier.weight(1f))
                     TrustDivider()
@@ -190,7 +141,7 @@ fun WhoWeAreScreen(
                     TrustCell(Icons.Filled.Psychology, "Mobile AI", Modifier.weight(1f))
                 }
 
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(16.dp))
 
                 Text(
                     text = "ROD uses real-time AI to detect nearby obstacles and provide simple alerts through visual, vibration, and voice feedback.",
@@ -201,21 +152,18 @@ fun WhoWeAreScreen(
             }
         }
 
-        // Bottom navigation: Skip / Next
+        // Bottom navigation
         Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .background(RodColors.SurfaceContainerLowest.copy(alpha = 0.9f))
                 .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
-                .padding(horizontal = 20.dp, vertical = 16.dp)
-                .padding(bottom = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+                .padding(horizontal = 20.dp)
+                .padding(top = 10.dp, bottom = 10.dp),
+            horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TextButton(onClick = onSkip) {
-                Text("Skip", style = RodType.LabelCaps, color = RodColors.TextSecondary)
-            }
             Button(
                 onClick = onNext,
                 shape = CircleShape,
@@ -261,26 +209,4 @@ private fun TrustDivider() {
             .width(1.dp)
             .background(RodColors.BorderLight)
     )
-}
-
-@Composable
-private fun DetectionBox(label: String, width: androidx.compose.ui.unit.Dp, height: androidx.compose.ui.unit.Dp) {
-    Box {
-        Box(
-            modifier = Modifier
-                .padding(top = 20.dp)
-                .size(width = width, height = height)
-                .clip(RoundedCornerShape(8.dp))
-                .border(2.dp, RodColors.Primary.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
-        )
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .clip(RoundedCornerShape(4.dp))
-                .background(RodColors.Primary)
-                .padding(horizontal = 8.dp, vertical = 2.dp)
-        ) {
-            Text(text = label, color = RodColors.OnPrimary, fontSize = 10.dp.toSp(), style = RodType.LabelCaps)
-        }
-    }
 }
