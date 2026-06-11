@@ -1,11 +1,15 @@
 package com.example.realtime_obstacle_detection.ui.theme
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import androidx.compose.ui.unit.sp
 import com.example.realtime_obstacle_detection.R
 
 /**
@@ -19,67 +23,87 @@ val InterFontFamily = FontFamily(
 )
 
 /**
- * ROD Design System typography tokens (sizes/line-heights/tracking from DESIGN.md).
+ * Converts a [Dp] value into a text size ([TextUnit]/sp) using the current display
+ * density. Because the result is derived from dp rather than raw sp, text keeps a
+ * fixed physical size regardless of the user's system font-scale — which keeps the
+ * compact, single-screen layouts from overflowing.
+ *
+ * Usage: `fontSize = 12.dp.toSp()`
+ */
+@Composable
+fun Dp.toSp(): TextUnit = with(LocalDensity.current) { this@toSp.toSp() }
+
+/**
+ * ROD Design System typography tokens. Sizes/line-heights are density-derived via
+ * [toSp] so every text using these styles is font-scale independent.
  */
 object RodType {
 
-    val DisplayLg = TextStyle(
-        fontFamily = InterFontFamily,
-        fontSize = 34.sp,
-        fontWeight = FontWeight.Bold,
-        lineHeight = 41.sp,
-        letterSpacing = (-0.02).em
-    )
+    val DisplayLg: TextStyle
+        @Composable get() = TextStyle(
+            fontFamily = InterFontFamily,
+            fontSize = 34.dp.toSp(),
+            fontWeight = FontWeight.Bold,
+            lineHeight = 41.dp.toSp(),
+            letterSpacing = (-0.02).em
+        )
 
-    val HeadlineMd = TextStyle(
-        fontFamily = InterFontFamily,
-        fontSize = 24.sp,
-        fontWeight = FontWeight.SemiBold,
-        lineHeight = 30.sp,
-        letterSpacing = (-0.01).em
-    )
+    val HeadlineMd: TextStyle
+        @Composable get() = TextStyle(
+            fontFamily = InterFontFamily,
+            fontSize = 24.dp.toSp(),
+            fontWeight = FontWeight.SemiBold,
+            lineHeight = 30.dp.toSp(),
+            letterSpacing = (-0.01).em
+        )
 
-    val HeadlineSm = TextStyle(
-        fontFamily = InterFontFamily,
-        fontSize = 20.sp,
-        fontWeight = FontWeight.SemiBold,
-        lineHeight = 25.sp
-    )
+    val HeadlineSm: TextStyle
+        @Composable get() = TextStyle(
+            fontFamily = InterFontFamily,
+            fontSize = 20.dp.toSp(),
+            fontWeight = FontWeight.SemiBold,
+            lineHeight = 25.dp.toSp()
+        )
 
-    val HeadlineLgMobile = TextStyle(
-        fontFamily = InterFontFamily,
-        fontSize = 28.sp,
-        fontWeight = FontWeight.Bold,
-        lineHeight = 34.sp
-    )
+    val HeadlineLgMobile: TextStyle
+        @Composable get() = TextStyle(
+            fontFamily = InterFontFamily,
+            fontSize = 28.dp.toSp(),
+            fontWeight = FontWeight.Bold,
+            lineHeight = 34.dp.toSp()
+        )
 
-    val AlertDisplay = TextStyle(
-        fontFamily = InterFontFamily,
-        fontSize = 28.sp,
-        fontWeight = FontWeight.Bold,
-        lineHeight = 34.sp,
-        letterSpacing = (-0.01).em
-    )
+    val AlertDisplay: TextStyle
+        @Composable get() = TextStyle(
+            fontFamily = InterFontFamily,
+            fontSize = 28.dp.toSp(),
+            fontWeight = FontWeight.Bold,
+            lineHeight = 34.dp.toSp(),
+            letterSpacing = (-0.01).em
+        )
 
-    val BodyLg = TextStyle(
-        fontFamily = InterFontFamily,
-        fontSize = 17.sp,
-        fontWeight = FontWeight.Normal,
-        lineHeight = 24.sp
-    )
+    val BodyLg: TextStyle
+        @Composable get() = TextStyle(
+            fontFamily = InterFontFamily,
+            fontSize = 17.dp.toSp(),
+            fontWeight = FontWeight.Normal,
+            lineHeight = 24.dp.toSp()
+        )
 
-    val BodyMd = TextStyle(
-        fontFamily = InterFontFamily,
-        fontSize = 15.sp,
-        fontWeight = FontWeight.Normal,
-        lineHeight = 20.sp
-    )
+    val BodyMd: TextStyle
+        @Composable get() = TextStyle(
+            fontFamily = InterFontFamily,
+            fontSize = 15.dp.toSp(),
+            fontWeight = FontWeight.Normal,
+            lineHeight = 20.dp.toSp()
+        )
 
-    val LabelCaps = TextStyle(
-        fontFamily = InterFontFamily,
-        fontSize = 13.sp,
-        fontWeight = FontWeight.SemiBold,
-        lineHeight = 16.sp,
-        letterSpacing = 0.05.em
-    )
+    val LabelCaps: TextStyle
+        @Composable get() = TextStyle(
+            fontFamily = InterFontFamily,
+            fontSize = 13.dp.toSp(),
+            fontWeight = FontWeight.SemiBold,
+            lineHeight = 16.dp.toSp(),
+            letterSpacing = 0.05.em
+        )
 }

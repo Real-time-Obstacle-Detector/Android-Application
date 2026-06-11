@@ -16,10 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.ChevronRight
@@ -108,22 +106,21 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .verticalScroll(rememberScrollState())
                     .widthIn(max = 576.dp)
                     .padding(horizontal = 20.dp)
-                    .padding(top = 16.dp, bottom = 32.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp)
+                    .padding(top = 12.dp, bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 // Configuration banner
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(160.dp)
-                        .clip(RoundedCornerShape(24.dp))
+                        .height(80.dp)
+                        .clip(RoundedCornerShape(20.dp))
                         .background(RodColors.SurfaceContainerHighest),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("Configuration", style = RodType.DisplayLg, color = Color.White)
+                    Text("Configuration", style = RodType.HeadlineMd, color = Color.White)
                 }
 
                 // Section: Model selection
@@ -174,12 +171,6 @@ fun SettingsScreen(
                                 }
                             }
                         }
-                        Spacer(Modifier.height(12.dp))
-                        Text(
-                            "Optimized for real-time obstacle identification with 32-bit floating point precision.",
-                            style = RodType.BodyMd,
-                            color = RodColors.TextSecondary
-                        )
                     }
                 }
 
@@ -194,11 +185,11 @@ fun SettingsScreen(
                             steps = 19,
                             onValueChange = { configThreshold = it },
                             onValueChangeFinished = { persist() },
-                            helper = "Lower values increase sensitivity but may cause false positives."
+                            helper = null
                         )
-                        Spacer(Modifier.height(16.dp))
+                        Spacer(Modifier.height(10.dp))
                         Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(RodColors.OutlineVariant.copy(alpha = 0.3f)))
-                        Spacer(Modifier.height(16.dp))
+                        Spacer(Modifier.height(10.dp))
                         SettingsSlider(
                             label = "IoU Threshold",
                             value = iouThreshold,
@@ -207,7 +198,7 @@ fun SettingsScreen(
                             steps = 19,
                             onValueChange = { iouThreshold = it },
                             onValueChangeFinished = { persist() },
-                            helper = "Intersection over Union ratio for bounding box suppression."
+                            helper = null
                         )
                     }
                 }
@@ -225,7 +216,7 @@ fun SettingsScreen(
                             onValueChangeFinished = { persist() },
                             helper = null
                         )
-                        Spacer(Modifier.height(16.dp))
+                        Spacer(Modifier.height(10.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
@@ -280,16 +271,6 @@ fun SettingsScreen(
                         Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = RodColors.OutlineVariant)
                     }
                 }
-
-                // Branding footer
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text("VIGILANT MODE ACTIVE v1.0.2", style = RodType.LabelCaps, color = RodColors.OnSurfaceVariant.copy(alpha = 0.4f))
-                    Text("ROD Assistive Research Lab © 2024", style = RodType.BodyMd, color = RodColors.OnSurface.copy(alpha = 0.4f))
-                }
             }
         }
     }
@@ -297,7 +278,7 @@ fun SettingsScreen(
 
 @Composable
 private fun SettingsSection(title: String, content: @Composable () -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(title, style = RodType.LabelCaps, color = RodColors.OnSurfaceVariant, modifier = Modifier.padding(horizontal = 8.dp))
         content()
     }
@@ -308,10 +289,10 @@ private fun GlassCard(content: @Composable androidx.compose.foundation.layout.Co
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(24.dp))
+            .clip(RoundedCornerShape(20.dp))
             .background(Color.White)
-            .border(1.dp, RodColors.BorderLight, RoundedCornerShape(24.dp))
-            .padding(20.dp),
+            .border(1.dp, RodColors.BorderLight, RoundedCornerShape(20.dp))
+            .padding(14.dp),
         content = content
     )
 }

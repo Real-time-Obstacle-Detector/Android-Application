@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
@@ -21,10 +22,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Accessible
 import androidx.compose.material.icons.filled.ArrowForward
@@ -118,23 +117,23 @@ fun HomePageScreen(navController: NavController) {
                 }
             }
 
+            // Single full-screen column — sized to fit without scrolling.
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .verticalScroll(rememberScrollState())
                     .widthIn(max = 512.dp)
                     .padding(horizontal = 20.dp)
-                    .padding(top = 16.dp, bottom = 24.dp),
+                    .padding(top = 8.dp, bottom = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Hero
+                // Hero (compact)
                 Box(
                     modifier = Modifier
-                        .size(160.dp)
-                        .clip(RoundedCornerShape(40.dp))
+                        .size(92.dp)
+                        .clip(RoundedCornerShape(26.dp))
                         .background(Color.White.copy(alpha = 0.7f))
-                        .border(1.dp, RodColors.OutlineVariant.copy(alpha = 0.3f), RoundedCornerShape(40.dp)),
+                        .border(1.dp, RodColors.OutlineVariant.copy(alpha = 0.3f), RoundedCornerShape(26.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
@@ -142,29 +141,29 @@ fun HomePageScreen(navController: NavController) {
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .size(128.dp)
-                            .clip(RoundedCornerShape(32.dp))
+                            .size(72.dp)
+                            .clip(RoundedCornerShape(20.dp))
                     )
                 }
 
-                Spacer(Modifier.height(32.dp))
+                Spacer(Modifier.height(12.dp))
 
                 Text(
                     text = "Real-time obstacle awareness.",
-                    style = RodType.HeadlineLgMobile,
+                    style = RodType.HeadlineMd,
                     color = RodColors.TextPrimary,
                     textAlign = TextAlign.Center
                 )
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(4.dp))
                 Text(
                     text = "Detect hazards, estimate distance, and receive voice or haptic alerts using on-device AI.",
                     style = RodType.BodyMd,
                     color = RodColors.OnSurfaceVariant,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.widthIn(max = 280.dp)
+                    modifier = Modifier.widthIn(max = 300.dp)
                 )
 
-                Spacer(Modifier.height(40.dp))
+                Spacer(Modifier.height(18.dp))
 
                 // Mode selection
                 Text(
@@ -173,19 +172,19 @@ fun HomePageScreen(navController: NavController) {
                     color = RodColors.Outline,
                     textAlign = TextAlign.Center
                 )
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(10.dp))
 
                 Column(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         ModeCard(
                             title = "Blind-Protector",
-                            description = "High-fidelity voice & haptic guidance",
+                            description = "Voice & haptic guidance",
                             icon = Icons.Filled.Accessible,
                             iconBg = RodColors.PrimaryFixed,
                             iconTint = RodColors.OnPrimaryFixed,
@@ -195,7 +194,7 @@ fun HomePageScreen(navController: NavController) {
                         )
                         ModeCard(
                             title = "Walk-Around",
-                            description = "Environmental visual overlays",
+                            description = "Visual overlays",
                             icon = Icons.Filled.DirectionsWalk,
                             iconBg = RodColors.SecondaryFixed,
                             iconTint = RodColors.OnSecondaryFixed,
@@ -208,7 +207,7 @@ fun HomePageScreen(navController: NavController) {
                         Spacer(Modifier.weight(0.5f))
                         ModeCard(
                             title = "Bounding Box",
-                            description = "Raw detection visualization for research and debugging.",
+                            description = "Raw detection view",
                             icon = Icons.Filled.CropFree,
                             iconBg = RodColors.SurfaceContainerHighest,
                             iconTint = RodColors.OnSurfaceVariant,
@@ -220,7 +219,7 @@ fun HomePageScreen(navController: NavController) {
                     }
                 }
 
-                Spacer(Modifier.height(40.dp))
+                Spacer(Modifier.height(14.dp))
 
                 // Feature pills
                 FlowRow(
@@ -231,7 +230,8 @@ fun HomePageScreen(navController: NavController) {
                     InfoPill("Voice Alerts", Icons.Filled.RecordVoiceOver, RodColors.Primary)
                 }
 
-                Spacer(Modifier.height(40.dp))
+                // Flexible gap pushes the actions to the bottom of the screen.
+                Spacer(Modifier.weight(1f).heightIn(min = 14.dp))
 
                 // Actions
                 Button(
@@ -243,13 +243,12 @@ fun HomePageScreen(navController: NavController) {
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp)
+                        .height(52.dp)
                 ) {
                     Text("Start Detection", style = RodType.HeadlineSm)
                     Spacer(Modifier.width(8.dp))
                     Icon(Icons.Filled.ArrowForward, contentDescription = null)
                 }
-                Spacer(Modifier.height(8.dp))
                 TextButton(onClick = { navController.navigate("about_us") }) {
                     Text("Learn how it works", style = RodType.LabelCaps, color = RodColors.Primary)
                 }
@@ -280,42 +279,41 @@ private fun ModeCard(
 ) {
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(24.dp))
+            .clip(RoundedCornerShape(20.dp))
             .background(if (selected) RodColors.SurfaceContainerLow else Color.White.copy(alpha = 0.7f))
             .border(
                 width = if (selected) 2.5.dp else 1.dp,
                 color = if (selected) RodColors.Primary else RodColors.BorderLight.copy(alpha = 0.5f),
-                shape = RoundedCornerShape(24.dp)
+                shape = RoundedCornerShape(20.dp)
             )
             .clickable { onClick() }
-            .padding(20.dp),
+            .padding(vertical = 12.dp, horizontal = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
-                .size(56.dp)
+                .size(44.dp)
                 .clip(CircleShape)
                 .background(iconBg),
             contentAlignment = Alignment.Center
         ) {
-            Icon(icon, contentDescription = null, tint = iconTint, modifier = Modifier.size(32.dp))
+            Icon(icon, contentDescription = null, tint = iconTint, modifier = Modifier.size(24.dp))
         }
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(8.dp))
         Text(
             text = title,
-            fontSize = 16.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
             color = RodColors.TextPrimary,
-            textAlign = TextAlign.Center,
-            style = RodType.HeadlineSm.copy(fontSize = 16.sp)
+            textAlign = TextAlign.Center
         )
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(2.dp))
         Text(
             text = description,
-            fontSize = 12.sp,
+            fontSize = 11.sp,
             color = RodColors.OnSurfaceVariant,
             textAlign = TextAlign.Center,
-            lineHeight = 15.sp
+            lineHeight = 13.sp
         )
     }
 }

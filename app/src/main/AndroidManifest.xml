@@ -35,6 +35,7 @@
             android:name=".ui.activities.OnDetectionActivity"
             android:exported="false"
             android:label="@string/title_activity_on_detection"
+            android:screenOrientation="landscape"
             android:theme="@style/Theme.Realtime_Obstacle_Detection" />
         <activity
             android:name=".ui.activities.BlindDetectorActivity"

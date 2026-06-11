@@ -1,5 +1,7 @@
 package com.example.realtime_obstacle_detection.presentation.tensorflow
 
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -34,7 +36,15 @@ class TensorFlowLiteFrameAnalyzer (
             val rotationDegrees = image.imageInfo.rotationDegrees
 
             val startTime = System.currentTimeMillis()
-            val bitmap = image.toBitmap()
+            val rawBitmap = image.toBitmap()
+            // Rotate the raw sensor frame to its upright orientation so the
+            // detected scene (and the boxes drawn on it) match the live camera view.
+            val bitmap = if (rotationDegrees != 0) {
+                val matrix = Matrix().apply { postRotate(rotationDegrees.toFloat()) }
+                Bitmap.createBitmap(rawBitmap, 0, 0, rawBitmap.width, rawBitmap.height, matrix, true)
+            } else {
+                rawBitmap
+            }
 
             val endTime = System.currentTimeMillis()
 
