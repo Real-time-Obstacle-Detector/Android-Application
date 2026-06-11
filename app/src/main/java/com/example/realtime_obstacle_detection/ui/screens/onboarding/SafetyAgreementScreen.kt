@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,14 +18,12 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -86,41 +83,24 @@ fun SafetyAgreementScreen(
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = 20.dp)
-                    .padding(bottom = 200.dp),
+                    .padding(bottom = 164.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(24.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Calm caution illustration
                 Box(
                     modifier = Modifier
+                        .widthIn(max = 340.dp)
                         .fillMaxWidth()
-                        .aspectRatio(4f / 3f)
+                        .height(220.dp)
                         .clip(RoundedCornerShape(24.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
-                        painter = androidx.compose.ui.res.painterResource(R.drawable.onboarding_hallway),
+                        painter = androidx.compose.ui.res.painterResource(R.drawable.onboarding_third_slider),
                         contentDescription = null,
-                        contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                        contentScale = androidx.compose.ui.layout.ContentScale.Fit,
                         modifier = Modifier.fillMaxSize()
-                    )
-                    Box(
-                        modifier = Modifier
-                            .size(192.dp)
-                            .clip(CircleShape)
-                            .border(1.dp, RodColors.TertiaryFixedDim.copy(alpha = 0.2f), CircleShape)
-                    )
-                    Box(
-                        modifier = Modifier
-                            .size(128.dp)
-                            .clip(CircleShape)
-                            .border(2.dp, RodColors.TertiaryFixedDim.copy(alpha = 0.4f), CircleShape)
-                    )
-                    Icon(
-                        Icons.Filled.Security,
-                        contentDescription = null,
-                        tint = RodColors.TertiaryFixedDim,
-                        modifier = Modifier.size(48.dp)
                     )
                 }
 
@@ -132,7 +112,7 @@ fun SafetyAgreementScreen(
                         color = RodColors.TextPrimary,
                         textAlign = TextAlign.Center
                     )
-                    Spacer(Modifier.height(16.dp))
+                    Spacer(Modifier.height(8.dp))
                     Text(
                         text = "ROD is a research project and assistive awareness tool. It helps detect obstacles but cannot guarantee complete avoidance or perfect accuracy.",
                         style = RodType.BodyLg,
@@ -149,8 +129,8 @@ fun SafetyAgreementScreen(
                         .clip(RoundedCornerShape(24.dp))
                         .background(RodColors.SurfaceContainerLow)
                         .border(1.dp, RodColors.BorderLight, RoundedCornerShape(24.dp))
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -178,8 +158,8 @@ fun SafetyAgreementScreen(
                 .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
                 .background(Color.White.copy(alpha = 0.92f))
                 .padding(horizontal = 20.dp)
-                .padding(top = 24.dp, bottom = 32.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+                .padding(top = 14.dp, bottom = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // Agreement checkbox row
             Row(
