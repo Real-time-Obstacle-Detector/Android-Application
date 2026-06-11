@@ -8,6 +8,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.realtime_obstacle_detection.ui.model.navigation.HomePageNavGraph
 
 
+/**
+ * Sets up the navigation host and controller for the home page.
+ *
+ * This composable initializes a [rememberNavController] and provides it to the
+ * [HomePageNavGraph] to manage navigation within the home section of the app.
+ *
+ * @param startDestination The initial route to be displayed within the home navigation graph.
+ */
 @ExperimentalMaterialApi
 @Composable
 fun HomePageSetUp(startDestination: String) {
