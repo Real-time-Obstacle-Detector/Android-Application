@@ -2,6 +2,7 @@ package com.example.realtime_obstacle_detection.ui.screens.homepage
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,8 +31,10 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.CropFree
 import androidx.compose.material.icons.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.RecordVoiceOver
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.VerifiedUser
+import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -228,7 +231,10 @@ fun HomePageScreen(navController: NavController) {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     InfoPill("Private On-Device AI", Icons.Filled.VerifiedUser, RodColors.Secondary)
-                    InfoPill("Voice Alerts", Icons.Filled.RecordVoiceOver, RodColors.Primary)
+                    Crossfade(targetState = selectedMode, label = "Mode feature pill") { mode ->
+                        val feature = modeFeaturePill(mode)
+                        InfoPill(feature.text, feature.icon, feature.iconTint)
+                    }
                 }
 
                 // Flexible gap pushes the actions to the bottom of the screen.
@@ -255,6 +261,20 @@ fun HomePageScreen(navController: NavController) {
                 }
             }
         }
+    }
+}
+
+private data class ModeFeaturePill(
+    val text: String,
+    val icon: ImageVector,
+    val iconTint: Color
+)
+
+private fun modeFeaturePill(mode: DetectionMode): ModeFeaturePill {
+    return when (mode) {
+        DetectionMode.BLIND -> ModeFeaturePill("Voice Alerts", Icons.Filled.RecordVoiceOver, RodColors.Primary)
+        DetectionMode.WALK -> ModeFeaturePill("Vibration Alerts", Icons.Filled.Vibration, RodColors.Secondary)
+        DetectionMode.BOUNDING -> ModeFeaturePill("Test & Save", Icons.Filled.Save, RodColors.Tertiary)
     }
 }
 
