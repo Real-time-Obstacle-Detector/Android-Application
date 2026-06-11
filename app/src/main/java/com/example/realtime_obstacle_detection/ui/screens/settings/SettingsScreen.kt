@@ -20,13 +20,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIos
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
@@ -142,7 +141,8 @@ fun SettingsScreen(
                                     .fillMaxWidth()
                                     .height(44.dp)
                                     .clip(RoundedCornerShape(12.dp))
-                                    .background(RodColors.SurfaceContainerLow)
+                                    .background(Color.White)
+                                    .border(1.dp, RodColors.BorderLight, RoundedCornerShape(12.dp))
                                     .padding(horizontal = 16.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween
@@ -157,7 +157,8 @@ fun SettingsScreen(
                             }
                             ExposedDropdownMenu(
                                 expanded = dropdownExpanded,
-                                onDismissRequest = { dropdownExpanded = false }
+                                onDismissRequest = { dropdownExpanded = false },
+                                modifier = Modifier.background(Color.White)
                             ) {
                                 Models.entries.forEach { model ->
                                     DropdownMenuItem(
@@ -166,7 +167,10 @@ fun SettingsScreen(
                                             selectedModel = model
                                             dropdownExpanded = false
                                             persist()
-                                        }
+                                        },
+                                        colors = MenuDefaults.itemColors(
+                                            textColor = RodColors.OnSurface
+                                        )
                                     )
                                 }
                             }
@@ -241,36 +245,6 @@ fun SettingsScreen(
                     }
                 }
 
-                // Section: Info / About us
-                SettingsSection("INFO") {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(24.dp))
-                            .background(RodColors.SurfaceContainerLowest)
-                            .border(1.dp, RodColors.BorderLight, RoundedCornerShape(24.dp))
-                            .clickable { onAbout() }
-                            .padding(20.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(16.dp))
-                                    .background(RodColors.PrimaryContainer.copy(alpha = 0.1f))
-                                    .padding(12.dp)
-                            ) {
-                                Icon(Icons.Filled.Groups, contentDescription = null, tint = RodColors.Primary)
-                            }
-                            Column {
-                                Text("About us", style = RodType.HeadlineSm, color = RodColors.OnSurface)
-                                Text("Team and Research Background", style = RodType.BodyMd, color = RodColors.TextSecondary)
-                            }
-                        }
-                        Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = RodColors.OutlineVariant)
-                    }
-                }
             }
         }
     }

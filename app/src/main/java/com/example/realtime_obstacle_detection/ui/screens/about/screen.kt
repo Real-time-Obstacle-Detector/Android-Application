@@ -56,6 +56,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -138,11 +139,31 @@ fun AboutUsPageScreen() {
                         .padding(12.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    QuickAction("GitHub", Icons.Filled.Code, Modifier.weight(1f))
-                    QuickAction("Website", Icons.Filled.Language, Modifier.weight(1f))
-                    QuickAction("LinkedIn", Icons.Filled.Share, Modifier.weight(1f))
-                    QuickAction("HF", Icons.Filled.Storage, Modifier.weight(1f))
-                    QuickAction("Kaggle", Icons.Filled.Terminal, Modifier.weight(1f))
+                    QuickAction(
+                        label = "GitHub",
+                        icon = Icons.Filled.Code,
+                        url = "https://github.com/Real-time-Obstacle-Detector",
+                        modifier = Modifier.weight(1f)
+                    )
+                    QuickAction("Website", Icons.Filled.Language, url = null, Modifier.weight(1f))
+                    QuickAction(
+                        label = "LinkedIn",
+                        icon = Icons.Filled.Share,
+                        url = "https://www.linkedin.com/in/abtinzandi/",
+                        modifier = Modifier.weight(1f)
+                    )
+                    QuickAction(
+                        label = "HF",
+                        icon = Icons.Filled.Storage,
+                        url = "https://huggingface.co/datasets/Abtinzandi/Obstacle-Detection-Dataset-YOLO",
+                        modifier = Modifier.weight(1f)
+                    )
+                    QuickAction(
+                        label = "Kaggle",
+                        icon = Icons.Filled.Terminal,
+                        url = "https://www.kaggle.com/datasets/abtinzandi/obstacle-detection-dataset",
+                        modifier = Modifier.weight(1f)
+                    )
                 }
 
                 // Dataset accordion
@@ -156,9 +177,12 @@ fun AboutUsPageScreen() {
 }
 
 @Composable
-private fun QuickAction(label: String, icon: ImageVector, modifier: Modifier = Modifier) {
+private fun QuickAction(label: String, icon: ImageVector, url: String?, modifier: Modifier = Modifier) {
+    val uriHandler = LocalUriHandler.current
     Column(
-        modifier = modifier,
+        modifier = modifier.then(
+            if (url != null) Modifier.clickable { uriHandler.openUri(url) } else Modifier
+        ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
