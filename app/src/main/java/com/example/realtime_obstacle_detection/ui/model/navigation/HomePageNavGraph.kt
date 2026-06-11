@@ -75,7 +75,7 @@ fun HomePageNavGraph(
         }
 
         composable(route = HomeScreens.AboutUs.route) {
-            AboutUsPageScreen()
+            AboutUsPageScreen(onBack = { navHostController.popBackStack() })
         }
     }
 }

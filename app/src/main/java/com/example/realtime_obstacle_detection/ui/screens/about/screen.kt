@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.DirectionsBus
@@ -72,7 +74,7 @@ import com.example.realtime_obstacle_detection.ui.theme.toSp
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun AboutUsPageScreen() {
+fun AboutUsPageScreen(onBack: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -91,10 +93,23 @@ fun AboutUsPageScreen() {
                         shape = RoundedCornerShape(0.dp)
                     )
                     .height(44.dp)
-                    .padding(horizontal = 20.dp),
+                    .padding(horizontal = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("ROD", style = RodType.HeadlineMd, color = RodColors.Primary)
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) { onBack() }
+                        .padding(end = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Filled.ArrowBackIos, contentDescription = "Back", tint = RodColors.Primary, modifier = Modifier.size(20.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("ROD", style = RodType.HeadlineSm, color = RodColors.Primary)
+                }
             }
 
             Column(

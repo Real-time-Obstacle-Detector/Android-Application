@@ -127,6 +127,7 @@ fun HomePageScreen(navController: NavController) {
                     .fillMaxWidth()
                     .weight(1f)
                     .widthIn(max = 512.dp)
+                    .align(Alignment.CenterHorizontally)
                     .padding(horizontal = 20.dp)
                     .padding(top = 8.dp, bottom = 12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally

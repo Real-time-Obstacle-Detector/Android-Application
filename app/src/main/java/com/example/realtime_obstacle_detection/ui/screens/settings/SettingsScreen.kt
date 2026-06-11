@@ -3,6 +3,7 @@ package com.example.realtime_obstacle_detection.ui.screens.settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -92,13 +93,26 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .background(Color.White.copy(alpha = 0.8f))
                     .height(44.dp)
-                    .padding(horizontal = 12.dp)
-                    .clickable { persist(); onBack() },
+                    .padding(horizontal = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Filled.ArrowBackIos, contentDescription = "Back", tint = RodColors.Primary, modifier = Modifier.size(20.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("ROD", style = RodType.HeadlineSm, color = RodColors.Primary)
+                Row(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            persist()
+                            onBack()
+                        }
+                        .padding(end = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Filled.ArrowBackIos, contentDescription = "Back", tint = RodColors.Primary, modifier = Modifier.size(20.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("ROD", style = RodType.HeadlineSm, color = RodColors.Primary)
+                }
             }
 
             Column(
@@ -106,6 +120,7 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .weight(1f)
                     .widthIn(max = 576.dp)
+                    .align(Alignment.CenterHorizontally)
                     .padding(horizontal = 20.dp)
                     .padding(top = 12.dp, bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(14.dp)
