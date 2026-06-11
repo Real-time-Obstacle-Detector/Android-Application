@@ -85,7 +85,9 @@ fun HomePageScreen(navController: NavController) {
             .background(RodColors.Background)
             .systemBarsPadding()
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
             // Top app bar: ROD brand + settings
             Row(
                 modifier = Modifier
@@ -106,10 +108,21 @@ fun HomePageScreen(navController: NavController) {
                             .background(RodColors.Primary),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(Icons.Filled.Visibility, contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
+                        Icon(
+                            imageVector = Icons.Filled.Visibility,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(20.dp)
+                        )
                     }
-                    Text("ROD", style = RodType.HeadlineMd, color = RodColors.Primary)
+
+                    Text(
+                        text = "ROD",
+                        style = RodType.HeadlineMd,
+                        color = RodColors.Primary
+                    )
                 }
+
                 Box(
                     modifier = Modifier
                         .size(44.dp)
@@ -117,7 +130,11 @@ fun HomePageScreen(navController: NavController) {
                         .clickable { navController.navigate("settings") },
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.Filled.Settings, contentDescription = "Settings", tint = RodColors.OnSurfaceVariant)
+                    Icon(
+                        imageVector = Icons.Filled.Settings,
+                        contentDescription = "Settings",
+                        tint = RodColors.OnSurfaceVariant
+                    )
                 }
             }
 
@@ -177,6 +194,7 @@ fun HomePageScreen(navController: NavController) {
                     color = RodColors.Outline,
                     textAlign = TextAlign.Center
                 )
+
                 Spacer(Modifier.height(10.dp))
 
                 Column(
@@ -197,6 +215,7 @@ fun HomePageScreen(navController: NavController) {
                             onClick = { selectedMode = DetectionMode.BLIND },
                             modifier = Modifier.weight(1f)
                         )
+
                         ModeCard(
                             title = "Walk-Around",
                             description = "Visual overlays",
@@ -208,8 +227,14 @@ fun HomePageScreen(navController: NavController) {
                             modifier = Modifier.weight(1f)
                         )
                     }
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Spacer(Modifier.weight(0.5f))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Spacer(
+                            modifier = Modifier.weight(0.5f)
+                        )
+
                         ModeCard(
                             title = "Bounding Box",
                             description = "Raw detection view",
@@ -220,7 +245,10 @@ fun HomePageScreen(navController: NavController) {
                             onClick = { selectedMode = DetectionMode.BOUNDING },
                             modifier = Modifier.weight(1f)
                         )
-                        Spacer(Modifier.weight(0.5f))
+
+                        Spacer(
+                            modifier = Modifier.weight(0.5f)
+                        )
                     }
                 }
 
@@ -231,15 +259,31 @@ fun HomePageScreen(navController: NavController) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    InfoPill("Private On-Device AI", Icons.Filled.VerifiedUser, RodColors.Secondary)
-                    Crossfade(targetState = selectedMode, label = "Mode feature pill") { mode ->
+                    InfoPill(
+                        text = "Private On-Device AI",
+                        icon = Icons.Filled.VerifiedUser,
+                        iconTint = RodColors.Secondary
+                    )
+
+                    Crossfade(
+                        targetState = selectedMode,
+                        label = "Mode feature pill"
+                    ) { mode ->
                         val feature = modeFeaturePill(mode)
-                        InfoPill(feature.text, feature.icon, feature.iconTint)
+                        InfoPill(
+                            text = feature.text,
+                            icon = feature.icon,
+                            iconTint = feature.iconTint
+                        )
                     }
                 }
 
                 // Flexible gap pushes the actions to the bottom of the screen.
-                Spacer(Modifier.weight(1f).heightIn(min = 14.dp))
+                Spacer(
+                    modifier = Modifier
+                        .weight(1f)
+                        .heightIn(min = 14.dp)
+                )
 
                 // Actions
                 Button(
@@ -253,12 +297,29 @@ fun HomePageScreen(navController: NavController) {
                         .fillMaxWidth()
                         .height(52.dp)
                 ) {
-                    Text("Start Detection", style = RodType.HeadlineSm)
-                    Spacer(Modifier.width(8.dp))
-                    Icon(Icons.Filled.ArrowForward, contentDescription = null)
+                    Text(
+                        text = "Start Detection",
+                        style = RodType.HeadlineSm
+                    )
+
+                    Spacer(
+                        modifier = Modifier.width(8.dp)
+                    )
+
+                    Icon(
+                        imageVector = Icons.Filled.ArrowForward,
+                        contentDescription = null
+                    )
                 }
-                TextButton(onClick = { navController.navigate("about_us") }) {
-                    Text("Learn how it works", style = RodType.LabelCaps, color = RodColors.Primary)
+
+                TextButton(
+                    onClick = { navController.navigate("about_us") }
+                ) {
+                    Text(
+                        text = "Learn how it works",
+                        style = RodType.LabelCaps,
+                        color = RodColors.Primary
+                    )
                 }
             }
         }
@@ -273,9 +334,23 @@ private data class ModeFeaturePill(
 
 private fun modeFeaturePill(mode: DetectionMode): ModeFeaturePill {
     return when (mode) {
-        DetectionMode.BLIND -> ModeFeaturePill("Voice Alerts", Icons.Filled.RecordVoiceOver, RodColors.Primary)
-        DetectionMode.WALK -> ModeFeaturePill("Vibration Alerts", Icons.Filled.Vibration, RodColors.Secondary)
-        DetectionMode.BOUNDING -> ModeFeaturePill("Test & Save", Icons.Filled.Save, RodColors.Tertiary)
+        DetectionMode.BLIND -> ModeFeaturePill(
+            text = "Voice Alerts",
+            icon = Icons.Filled.RecordVoiceOver,
+            iconTint = RodColors.Primary
+        )
+
+        DetectionMode.WALK -> ModeFeaturePill(
+            text = "Vibration Alerts",
+            icon = Icons.Filled.Vibration,
+            iconTint = RodColors.Secondary
+        )
+
+        DetectionMode.BOUNDING -> ModeFeaturePill(
+            text = "Test & Save",
+            icon = Icons.Filled.Save,
+            iconTint = RodColors.Tertiary
+        )
     }
 }
 
@@ -317,22 +392,35 @@ private fun ModeCard(
                 .size(44.dp)
                 .clip(CircleShape)
                 .background(iconBg),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(icon, contentDescription = null, tint = iconTint, modifier = Modifier.size(24.dp))
-        }
-        Spacer(Modifier.height(8.dp))
-        Text(
-            text = title,
-            fontSize = 14.dp.toSp(),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = iconTint,
+            modifier = Modifier.size(24.dp)
+        )
+    }
+
+    Spacer(
+        modifier = Modifier.height(8.dp)
+    )
+
+    Text(
+        text = title,
+        fontSize = 14.dp.toSp(),
             fontWeight = FontWeight.SemiBold,
             color = RodColors.TextPrimary,
-            textAlign = TextAlign.Center
-        )
-        Spacer(Modifier.height(2.dp))
-        Text(
-            text = description,
-            fontSize = 11.dp.toSp(),
+        textAlign = TextAlign.Center
+    )
+
+    Spacer(
+        modifier = Modifier.height(2.dp)
+    )
+
+    Text(
+        text = description,
+        fontSize = 11.dp.toSp(),
             color = RodColors.OnSurfaceVariant,
             textAlign = TextAlign.Center,
             lineHeight = 13.dp.toSp()
@@ -351,7 +439,18 @@ private fun InfoPill(text: String, icon: ImageVector, iconTint: Color) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        Icon(icon, contentDescription = null, tint = iconTint, modifier = Modifier.size(16.dp))
-        Text(text = text, fontSize = 12.dp.toSp(), fontWeight = FontWeight.SemiBold, color = RodColors.OnSurfaceVariant)
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = iconTint,
+            modifier = Modifier.size(16.dp)
+        )
+
+        Text(
+            text = text,
+            fontSize = 12.dp.toSp(),
+            fontWeight = FontWeight.SemiBold,
+            color = RodColors.OnSurfaceVariant
+        )
     }
 }

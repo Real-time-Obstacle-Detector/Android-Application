@@ -105,7 +105,7 @@ private fun AboutTopBar(onBack: () -> Unit) {
 
             Spacer(Modifier.width(4.dp))
             Text(
-                "ROD",
+                text = "ROD",
                 style = RodType.HeadlineSm,
                 color = RodColors.Primary
             )
