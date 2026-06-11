@@ -42,8 +42,14 @@ internal fun ResearchPapersAccordion() {
         onToggle = { expanded = !expanded }
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            PaperRow("ROD: Real-time Obstacle Detector", "App & System Architecture")
-            PaperRow("ROD-31k: A Large-scale Obstacle Dataset", "Dataset Analysis & Benchmarks")
+            PaperRow(
+                title = "ROD: Real-time Obstacle Detector",
+                subtitle = "App & System Architecture"
+            )
+            PaperRow(
+                title = "ROD-31k: A Large-scale Obstacle Dataset",
+                subtitle = "Dataset Analysis & Benchmarks"
+            )
         }
     }
 }
@@ -61,8 +67,17 @@ private fun PaperRow(title: String, subtitle: String) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(title, style = RodType.BodyMd, fontWeight = FontWeight.SemiBold, color = RodColors.OnSurface)
-            Text(subtitle, fontSize = 12.dp.toSp(), color = RodColors.OnSurfaceVariant)
+            Text(
+                text = title,
+                style = RodType.BodyMd,
+                fontWeight = FontWeight.SemiBold,
+                color = RodColors.OnSurface
+            )
+            Text(
+                text = subtitle,
+                fontSize = 12.dp.toSp(),
+                color = RodColors.OnSurfaceVariant
+            )
         }
         Spacer(Modifier.width(12.dp))
         Box(
@@ -72,7 +87,12 @@ private fun PaperRow(title: String, subtitle: String) {
                 .background(RodColors.Primary),
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Filled.Download, contentDescription = "Download", tint = RodColors.OnPrimary, modifier = Modifier.size(20.dp))
+            Icon(
+                imageVector = Icons.Filled.Download,
+                contentDescription = "Download",
+                tint = RodColors.OnPrimary,
+                modifier = Modifier.size(20.dp)
+            )
         }
     }
 }

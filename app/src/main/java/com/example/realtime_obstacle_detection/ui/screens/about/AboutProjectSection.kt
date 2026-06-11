@@ -41,18 +41,18 @@ internal fun AboutProjectSection() {
                 color = RodColors.Primary
             )
             Text(
-                "ROD: Real-time Obstacle Detector",
+                text = "ROD: Real-time Obstacle Detector",
                 style = RodType.DisplayLg,
                 color = RodColors.OnSurface
             )
         }
         Text(
-            "ROD (Real-time Obstacle Detector) represents a pioneering leap in assistive mobility, integrating advanced YOLOv8 computer vision models with high-efficiency on-device AI. Our work focuses on empowering visually impaired individuals through a robust mobile optimization framework that delivers latency-free obstacle identification directly on standard smartphone hardware.",
+            text = "ROD (Real-time Obstacle Detector) represents a pioneering leap in assistive mobility, integrating advanced YOLOv8 computer vision models with high-efficiency on-device AI. Our work focuses on empowering visually impaired individuals through a robust mobile optimization framework that delivers latency-free obstacle identification directly on standard smartphone hardware.",
             style = RodType.BodyLg,
             color = RodColors.OnSurfaceVariant
         )
         Text(
-            "The system employs a multimodal feedback loop, combining spatial audio cues with haptic responses to provide intuitive environmental awareness. By leveraging the comprehensive ROD-31k dataset, we ensure high-precision detection across diverse urban scenarios, bridging the gap between sophisticated laboratory research and practical, life-enhancing accessibility tools.",
+            text = "The system employs a multimodal feedback loop, combining spatial audio cues with haptic responses to provide intuitive environmental awareness. By leveraging the comprehensive ROD-31k dataset, we ensure high-precision detection across diverse urban scenarios, bridging the gap between sophisticated laboratory research and practical, life-enhancing accessibility tools.",
             style = RodType.BodyLg,
             color = RodColors.OnSurfaceVariant
         )
@@ -76,7 +76,12 @@ internal fun AboutQuickActions() {
             url = "https://github.com/Real-time-Obstacle-Detector",
             modifier = Modifier.weight(1f)
         )
-        QuickAction("Website", Icons.Filled.Language, url = null, Modifier.weight(1f))
+        QuickAction(
+            label = "Website",
+            icon = Icons.Filled.Language,
+            url = null,
+            modifier = Modifier.weight(1f)
+        )
         QuickAction(
             label = "LinkedIn",
             icon = Icons.Filled.Share,
@@ -115,8 +120,18 @@ private fun QuickAction(label: String, icon: ImageVector, url: String?, modifier
                 .background(RodColors.SurfaceContainerHigh),
             contentAlignment = Alignment.Center
         ) {
-            Icon(icon, contentDescription = label, tint = RodColors.OnSurfaceVariant, modifier = Modifier.size(20.dp))
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = RodColors.OnSurfaceVariant,
+                modifier = Modifier.size(20.dp)
+            )
         }
-        Text(label, fontSize = 10.dp.toSp(), style = RodType.LabelCaps, color = RodColors.OnSurfaceVariant)
+        Text(
+            text = label,
+            fontSize = 10.dp.toSp(),
+            style = RodType.LabelCaps,
+            color = RodColors.OnSurfaceVariant
+        )
     }
 }

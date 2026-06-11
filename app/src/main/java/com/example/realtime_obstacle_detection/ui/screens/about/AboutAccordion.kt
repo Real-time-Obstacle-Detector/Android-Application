@@ -49,23 +49,32 @@ internal fun AccordionContainer(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
                 Icon(
                     imageVector = leadingIcon,
                     contentDescription = null,
                     tint = RodColors.Primary
                 )
-                Text(title, style = RodType.HeadlineMd, color = RodColors.OnSurface)
+                Text(
+                    text = title,
+                    style = RodType.HeadlineMd,
+                    color = RodColors.OnSurface
+                )
             }
             Icon(
-                Icons.Filled.ExpandMore,
+                imageVector = Icons.Filled.ExpandMore,
                 contentDescription = null,
                 tint = RodColors.OnSurfaceVariant,
                 modifier = Modifier.rotate(if (expanded) 180f else 0f)
             )
         }
         if (expanded) {
-            Box(modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 24.dp)) {
+            Box(
+                modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
+            ) {
                 content()
             }
         }

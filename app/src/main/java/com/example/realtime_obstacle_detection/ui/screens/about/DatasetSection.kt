@@ -89,16 +89,34 @@ internal fun DatasetAccordion() {
                         .align(Alignment.BottomStart)
                         .padding(16.dp)
                 ) {
-                    Text("Paper-level Instances", style = RodType.HeadlineSm, color = Color.White)
-                    Spacer(Modifier.height(4.dp))
-                    Text("31,331 verified high-fidelity annotations.", fontSize = 12.dp.toSp(), color = Color.White.copy(alpha = 0.8f))
+                    Text(
+                        text = "Paper-level Instances",
+                        style = RodType.HeadlineSm,
+                        color = Color.White
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .height(4.dp)
+                    )
+                    Text(
+                        text = "31,331 verified high-fidelity annotations.",
+                        fontSize = 12.dp.toSp(),
+                        color = Color.White.copy(alpha = 0.8f)
+                    )
                 }
             }
 
             // Stats list
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                StatRow(Icons.Filled.Download, "32k+ downloads on Hugging Face")
-                StatRow(Icons.Filled.TrendingUp, "500+ on Kaggle (May 2026 Trending)")
+                StatRow(
+                    icon = Icons.Filled.Download,
+                    text = "32k+ downloads on Hugging Face"
+                )
+
+                StatRow(
+                    icon = Icons.Filled.TrendingUp,
+                    text = "500+ on Kaggle (May 2026 Trending)"
+                )
             }
 
             // Metrics
@@ -106,22 +124,60 @@ internal fun DatasetAccordion() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                MetricCard("24,326", "Annotated Images", Modifier.weight(1f))
-                MetricCard("40,195", "Bounding Boxes", Modifier.weight(1f))
+                MetricCard(
+                    value = "24,326",
+                    label = "Annotated Images",
+                    modifier = Modifier.weight(1f)
+                )
+
+                MetricCard(
+                    value = "40,195",
+                    label = "Bounding Boxes",
+                    modifier = Modifier.weight(1f)
+                )
             }
 
             // Classes
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text("CLASS ONTOLOGY (25 CLASSES)", style = RodType.LabelCaps, color = RodColors.OnSurface)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    ClassChip("Person", Icons.Filled.Person, highlighted = true)
-                    ClassChip("Car", Icons.Filled.DirectionsCar)
-                    ClassChip("Stairs", Icons.Filled.Stairs)
-                    ClassChip("Crosswalk", Icons.Filled.Traffic)
-                    ClassChip("Manhole", Icons.Filled.RadioButtonChecked)
-                    ClassChip("Tree", Icons.Filled.Park)
-                    ClassChip("Bus", Icons.Filled.DirectionsBus)
-                    PlainChip("+18 more")
+                Text(
+                    text = "CLASS ONTOLOGY (25 CLASSES)",
+                    style = RodType.LabelCaps,
+                    color = RodColors.OnSurface
+                )
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    ClassChip(
+                        label = "Person",
+                        icon = Icons.Filled.Person,
+                        highlighted = true
+                    )
+                    ClassChip(
+                        label = "Car",
+                        icon = Icons.Filled.DirectionsCar
+                    )
+                    ClassChip(
+                        label = "Stairs",
+                        icon = Icons.Filled.Stairs
+                    )
+                    ClassChip(
+                        label = "Crosswalk",
+                        icon = Icons.Filled.Traffic
+                    )
+                    ClassChip(
+                        label = "Manhole",
+                        icon = Icons.Filled.RadioButtonChecked
+                    )
+                    ClassChip(
+                        label = "Tree",
+                        icon = Icons.Filled.Park
+                    )
+                    ClassChip(
+                        label = "Bus",
+                        icon = Icons.Filled.DirectionsBus
+                    )
+                    PlainChip(label = "+18 more")
                 }
             }
         }
@@ -139,8 +195,17 @@ private fun StatRow(icon: ImageVector, text: String) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Icon(icon, contentDescription = null, tint = RodColors.Primary, modifier = Modifier.size(20.dp))
-        Text(text, style = RodType.BodyMd, color = RodColors.OnSurface)
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = RodColors.Primary,
+            modifier = Modifier.size(20.dp)
+        )
+        Text(
+            text = text,
+            style = RodType.BodyMd,
+            color = RodColors.OnSurface
+        )
     }
 }
 
@@ -153,9 +218,19 @@ private fun MetricCard(value: String, label: String, modifier: Modifier = Modifi
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(value, fontSize = 24.dp.toSp(), fontWeight = FontWeight.Bold, color = RodColors.Primary)
+        Text(
+            text = value,
+            fontSize = 24.dp.toSp(),
+            fontWeight = FontWeight.Bold,
+            color = RodColors.Primary
+        )
         Spacer(Modifier.height(2.dp))
-        Text(label.uppercase(), fontSize = 10.dp.toSp(), style = RodType.LabelCaps, color = RodColors.OnSurfaceVariant)
+        Text(
+            text = label.uppercase(),
+            fontSize = 10.dp.toSp(),
+            style = RodType.LabelCaps,
+            color = RodColors.OnSurfaceVariant
+        )
     }
 }
 
@@ -173,8 +248,17 @@ private fun ClassChip(label: String, icon: ImageVector, highlighted: Boolean = f
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        Icon(icon, contentDescription = null, tint = fg, modifier = Modifier.size(14.dp))
-        Text(label, fontSize = 12.dp.toSp(), color = fg)
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = fg,
+            modifier = Modifier.size(14.dp)
+        )
+        Text(
+            text = label,
+            fontSize = 12.dp.toSp(),
+            color = fg
+        )
     }
 }
 
@@ -187,6 +271,10 @@ private fun PlainChip(label: String) {
             .border(1.dp, RodColors.OutlineVariant, CircleShape)
             .padding(horizontal = 12.dp, vertical = 4.dp)
     ) {
-        Text(label, fontSize = 12.dp.toSp(), color = RodColors.OnSurfaceVariant)
+        Text(
+            text = label,
+            fontSize = 12.dp.toSp(),
+            color = RodColors.OnSurfaceVariant
+        )
     }
 }
